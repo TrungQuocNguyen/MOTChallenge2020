@@ -5,7 +5,6 @@ import torch.nn.functional as F
 import motmetrics as mm
 from torchvision.ops.boxes import clip_boxes_to_image, nms
 
-
 class Tracker:
 	"""The main tracking file, here is where magic happens."""
 

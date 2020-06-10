@@ -119,8 +119,7 @@ class MOT16Sequence(Dataset):
 
     def __getitem__(self, idx):
         """Return the ith image converted to blob"""
-        data = self.data[idx] #self.data is list of dict, len(self.data) = seqLength
-
+        data = self.data[idx] #self.data is list of dict, len(self.data) = seqLength . dict = {gt, img_path, vis, seg_img}
         img = Image.open(data['im_path']).convert("RGB")
 
         img = self.transforms(img)

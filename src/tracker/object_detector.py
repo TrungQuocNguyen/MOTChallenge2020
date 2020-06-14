@@ -18,5 +18,13 @@ class FRCNN_FPN(FasterRCNN):
         img = img.to(device)
 
         detections = self(img)[0]
-
         return detections['boxes'].detach().cpu(), detections['scores'].detach().cpu()
+
+    #def detect(self, img):
+    #    device = list(self.parameters())[0].device
+    #    img = img.to(device)
+
+    #    detections = self(img)
+    #    list_boxes = [f['boxes'].detach().cpu() for f in detections]
+    #    list_scores = [f['scores'].detach().cpu() for f in detections]
+    #    return list_boxes, list_scores

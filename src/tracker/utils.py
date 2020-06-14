@@ -7,7 +7,7 @@ import random
 from collections import defaultdict
 from os import path as osp
 
-import cv2
+#import cv2
 import matplotlib
 import matplotlib.pyplot as plt
 import motmetrics as mm
@@ -249,3 +249,41 @@ class ToTensor(object):
     def __call__(self, image, target):
         image = F.to_tensor(image)
         return image, target
+
+
+def collate_fn(batch):
+    img_list = []
+    gt = {}
+    img_path = []
+    vis = {}
+    seg_img = []
+    for sample in batch: 
+      img_list.append(sample['img'])
+      img_path.append(sample['img_path'])
+      if 'seg_img' in sample: 
+        seg_img.append(torch.tensor(sample['seg_img']))
+      #tensor_batch['img'] = torch.stack([sample['img']for sample in batch])
+      for key in sample['gt'].keys():
+        if key not in gt.keys():
+          gt[key] = [] 
+        gt[key].append(torch.from_numpy(sample['gt'][key]))
+      for key in sample['vis'].keys(): 
+        if key not in vis.keys():
+          vis[key] = [] 
+        vis[key].append(sample['vis'][key])
+    img = torch.stack(img_list)
+    for key in gt.keys(): 
+      gt[key] = torch.stack(gt[key])
+    for key in vis.keys(): 
+      vis[key] = torch.tensor(vis[key])
+    
+    
+    batch_frames = {}
+    batch_frames['img'] = img
+    batch_frames['gt'] = gt
+    batch_frames['img_path'] = img_path
+    batch_frames['vis'] = vis
+    if len(seg_img): 
+      seg_img = torch.stack(seg_img)
+      batch_frames['seg_img'] = seg_img
+    return batch_frames
